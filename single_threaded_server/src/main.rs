@@ -1,11 +1,16 @@
 use std::{
+    env,
     fs,
     io::{BufReader, prelude::*},
     net::{TcpListener, TcpStream},
 };
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let port = env::var("PORT").unwrap_or_else(|_| "7878".to_string());
+    let bind_address = format!("0.0.0.0:{}", port);
+    
+    let listener = TcpListener::bind(&bind_address).unwrap();
+    println!("Server is listening on {}", bind_address);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
